@@ -41,8 +41,10 @@ export class ProduitService {
   // }
 
   listeProduit(): Observable<Produit[]> {
-    // let httpHeaders = this.addHeaderTokan();
-    return this.http.get<Produit[]>(apiURL + '/all', { headers: this.addHeaderToken() });
+    // Cette syntaxe n'est plus utilisée avec l'intercepteur
+    // return this.http.get<Produit[]>(apiURL + '/all', { headers: this.addHttpHeaderToken() });
+    //Voici la nouvelle syntaxe avec l'intercepteur, plus besoin d'ajouter le header
+    return this.http.get<Produit[]>(apiURL + '/all');
   }
 
   // ajouterProduit( prod: Produit){
@@ -51,7 +53,7 @@ export class ProduitService {
 
   ajouterProduit(prod: Produit): Observable<Produit> {
     const url = `${apiURL}/addprod`;
-    return this.http.post<Produit>(url, prod, { headers: this.addHeaderToken() }); //appel de l'API rest avec environnement
+    return this.http.post<Produit>(url, prod); //appel de l'API rest avec environnement
   }
 
   // supprimerProduit(p: Produit){
@@ -78,7 +80,7 @@ export class ProduitService {
 
   supprimerProduit(id: number) {
     const url = `${apiURL}/delprod/${id}`;
-    return this.http.delete(url, { headers: this.addHeaderToken() });
+    return this.http.delete(url);
   }
 
   // consulterProduit(id:number): Produit{
@@ -88,7 +90,7 @@ export class ProduitService {
 
   consulterProduit(id: number): Observable<Produit> {
     const url = `${apiURL}/getbyid/${id}`;
-    return this.http.get<Produit>(url, { headers: this.addHeaderToken() });
+    return this.http.get<Produit>(url);
   }
 
   // updateProduit( prod: Produit){
@@ -102,7 +104,7 @@ export class ProduitService {
 
   updateProduit(prod: Produit): Observable<Produit> {
     const url = `${apiURL}/updateprod`;
-    return this.http.put<Produit>(url, prod, { headers: this.addHeaderToken() });
+    return this.http.put<Produit>(url, prod);
   }
 
   // listeCategories():Categorie[] {
@@ -112,7 +114,7 @@ export class ProduitService {
   //API REST Personnelle
   listeCategories(): Observable<Categorie[]> {
     const url = `${apiURL}/cat`;
-    return this.http.get<Categorie[]>(url, { headers: this.addHeaderToken() });
+    return this.http.get<Categorie[]>(url);
   }
 
   //API Spring Data REST
@@ -126,20 +128,20 @@ export class ProduitService {
 
   rechercherParCategorie(idCat: number): Observable<Produit[]> {
     const url = `${apiURL}/prodscat/${idCat}`;
-    return this.http.get<Produit[]>(url, { headers: this.addHeaderToken() });
+    return this.http.get<Produit[]>(url);
   }
 
   rechercherParNom(nom: string): Observable<Produit[]> {
     const url = `${apiURL}/prodsByName/${nom}`;
-    return this.http.get<Produit[]>(url, { headers: this.addHeaderToken() });
+    return this.http.get<Produit[]>(url);
   }
 
   ajouterCategorie(cat: Categorie): Observable<Categorie> {
     const url = `${apiURL}/cat`;
-    return this.http.post<Categorie>(url, cat, { headers: this.addHeaderToken() });
+    return this.http.post<Categorie>(url, cat);
   }
 
-  addHeaderToken(){
+  addHttpHeaderToken(){
     let jwt = this.authService.getToken();
     jwt = 'Bearer ' + jwt;
     return new HttpHeaders({ Authorization: jwt });
