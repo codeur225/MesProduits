@@ -1,0 +1,60 @@
+<div class="container">
+
+  <form class="form-inline">
+    <div class="form-group mx-sm-3 mb-2 mt-2 ">
+      <label>Nom Produit</label>
+      <input type="text" class="form-control" [(ngModel)]="nomProduit" name="nomProduit" class="form-control">
+      <button type="submit" (click)="rechercherProds()" class="btn btn-primary mb-2 ml-2">Rechercher</button>
+    </div>
+  </form>
+
+  <form class="form-inline">
+    <div class="form-group mx-sm-3 mb-2 mt-2 ">
+      <label>Nom Produit avec upkey</label>
+      <input class="form-control" #searchTerm (keyup)="onKeyUp(searchTerm.value)">
+    </div>
+  </form>
+
+  <form class="form-inline">
+    <div class="form-group mx-sm-3 mb-2 mt-2 ">
+      <label>Nom Produit avec Pipe</label>
+      <input #nom [(ngModel)]="searchTermPipe" name="searchTermPipe" class="form-control">
+    </div>
+  </form>
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <table class="table table-striped">
+        <tr>
+          <th>N°</th>
+          <th>Nom</th>
+          <th>Prix</th>
+          <th>Date Création</th>
+          <th>Categorie</th>
+          <th></th>
+          <th></th>
+        </tr>
+        @for (produit of produits | searchFilter: searchTermPipe; track produit.idProduit; let index =$index; let nbr=$count; let first = $first; let
+        last = $last)
+        {
+        @if(index==0)
+        { <h3>Nombre : {{nbr}}</h3>}
+        <tbody>
+          <tr>
+            <td>{{index + 1}}</td>
+            <td>{{produit.nomProduit}}</td>
+            <td>{{produit.prixProduit}}</td>
+            <td>{{produit.dateCreation | date:'dd/MM/yyyy'}}</td>
+            <td>{{produit.categorie.nomCat}}</td>
+            <!-- <td><a class="btn btn-success" [routerLink]="['/updateProduit',produit.idProduit]">Modifier</a></td>
+            <td><a class="btn btn-danger" (click)="deleteProduit(produit)">Supprimer</a></td> -->
+          </tr>
+        </tbody>
+        }
+        @empty {
+        <h1>Aucun produit trouvé !</h1>
+        }
+      </table>
+    </div>
+  </div>
+</div>
