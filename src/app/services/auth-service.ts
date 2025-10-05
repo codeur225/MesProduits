@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../model/user.model';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { apiURLogin } from '../config';
+import { apiURL, apiURLogin } from '../config';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
@@ -95,5 +95,9 @@ export class AuthService {
 
   isTokenExpired(): Boolean {
     return this.helper.isTokenExpired(this.token);
+  }
+
+  registerUser(user: User) {
+    return this.http.post<User>(apiURL + '/register', user, { observe: 'response' });
   }
 }
