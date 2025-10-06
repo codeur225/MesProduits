@@ -1,6 +1,7 @@
+import { AuthService } from './../services/auth-service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { User } from '../model/user.model';
 import { CommonModule } from '@angular/common';
 
@@ -15,8 +16,9 @@ export class Register implements OnInit {
   public user = new User();
   confirmPassword?: string;
   myForm!: FormGroup;
+  err!: string;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router)  {}
 
   ngOnInit(): void {
     this.myForm = this.formBuilder.group({
@@ -33,7 +35,20 @@ export class Register implements OnInit {
     this.user.password = this.myForm.value['password'];
     this.confirmPassword = this.myForm.value['confirmPassword'];
     console.log(this.user);
-    return false
+    this.authService.registerUser(this.user).subscribe({
+      next: (res) => {
+        this. authService.setRegistredUser(this.user);
+        // alert('veillez confirmer votre email');
+        this.router.navigate(["/verifEmail"]);
+      },
+      error: (err: any) => {
+        if ((err.status = 400)) {
+          this.err = err.error.message;
+        }
+      },
+    });
+    
+    // return false
   }
 
 }

@@ -14,6 +14,7 @@ export class AuthService {
     { username: 'nadhem', password: '123', roles: ['USER'] },
   ];*/
 
+  public regitredUser: User = new User();
   token!: string;
   private helper = new JwtHelperService();
 
@@ -98,6 +99,18 @@ export class AuthService {
   }
 
   registerUser(user: User) {
-    return this.http.post<User>(apiURL + '/register', user, { observe: 'response' });
+    return this.http.post<User>(apiURLogin + '/register', user, { observe: 'response' });
+  }
+
+  setRegistredUser(user: User) {
+    this.regitredUser = user;
+  }
+
+  getRegistredUser() {
+    return this.regitredUser;
+  }
+
+  validateEmail(code: string) {
+    return this.http.get<User>(apiURLogin + '/verifyEmail/' + code);
   }
 }
