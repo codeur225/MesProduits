@@ -8,6 +8,7 @@ import { apiURL, apiURLCat } from '../config';
 import { environment } from '../../environments/environment';
 import { CategorieWrapper } from '../model/categorieWrapped.model';
 import { AuthService } from './auth-service';
+import { Fichier } from '../model/Fichier.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -146,4 +147,19 @@ export class ProduitService {
     jwt = 'Bearer ' + jwt;
     return new HttpHeaders({ Authorization: jwt });
   }
+
+  uploadFichier(file: File, filename: string): Observable<Fichier> {
+    const fichierFormData = new FormData();
+    console.log(file);
+    console.log(filename);
+    fichierFormData.append('image', file, filename);
+    const url = `${apiURL + '/fichier/upload'}`;
+    return this.http.post<Fichier>(url, fichierFormData);
+  }
+
+  loadFichier(id: number): Observable<Fichier> {
+    const url = `${apiURL + '/fichier/get/info'}/${id}`;
+    return this.http.get<Fichier>(url);
+  }
+
 }
