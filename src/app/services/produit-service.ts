@@ -173,4 +173,11 @@ export class ProduitService {
     const url = `${apiURL}/fichier/delete/${id}`;
     return this.http.delete(url, httpOptions);
   }
+
+  uploadImageFS(file: File, filename: string, idProd: number): Observable<any> {
+    const imageFormData = new FormData();
+    imageFormData.append('image', file, filename);
+    const url = `${apiURL + '/fichier/uploadFS'}/${idProd}`;
+    return this.http.post(url, imageFormData);
+  }
 }

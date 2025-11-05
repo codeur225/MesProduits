@@ -14,7 +14,7 @@ import { Fichier } from '../model/Fichier.model';
 })
 export class Produits implements OnInit {
   produits?: Produit[]; //un tableau de Produit
-
+  apiurl:string='http://localhost:8080/produits/api';
   constructor(private produitService: ProduitService, public authService: AuthService) {}
 
   ngOnInit(): void {
@@ -40,14 +40,20 @@ export class Produits implements OnInit {
   //   });
   // }
 
+  // chargerProduits() {
+  //   this.produitService.listeProduit().subscribe((prods) => {
+  //     this.produits = prods;
+  //     this.produits.forEach((prod) => {
+  //       console.log(prod);
+  //       console.log(prod.fichiers[0]);
+  //       prod.fichierStr = 'data:' + prod.fichiers[0].type + ';base64,' + prod.fichiers[0].image;
+  //     });
+  //   });
+  // }
+
   chargerProduits() {
     this.produitService.listeProduit().subscribe((prods) => {
       this.produits = prods;
-      this.produits.forEach((prod) => {
-        console.log(prod);
-        console.log(prod.fichiers[0]);
-        prod.fichierStr = 'data:' + prod.fichiers[0].type + ';base64,' + prod.fichiers[0].image;
-      });
     });
   }
 

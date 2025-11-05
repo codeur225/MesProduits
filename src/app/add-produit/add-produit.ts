@@ -10,27 +10,25 @@ import { Fichier } from '../model/Fichier.model';
   selector: 'app-add-produit',
   imports: [FormsModule],
   templateUrl: './add-produit.html',
-  styleUrl: './add-produit.css'
+  styleUrl: './add-produit.css',
 })
 export class AddProduit implements OnInit {
-
   newProduit = new Produit();
 
-  categories! : Categorie[];
-  newIdCat! : number;
-  newCategorie! : Categorie;
+  categories!: Categorie[];
+  newIdCat!: number;
+  newCategorie!: Categorie;
   uploadedFichier!: File;
   fichierPath: any;
 
-  constructor(private produitService: ProduitService, private router :Router) { }
+  constructor(private produitService: ProduitService, private router: Router) {}
 
   ngOnInit(): void {
     // this.categories = this.produitService.listeCategories();
-    this.produitService.listeCategories().
-      subscribe(cats => {
-        this.categories = cats;
-        console.log(cats);
-      });
+    this.produitService.listeCategories().subscribe((cats) => {
+      this.categories = cats;
+      console.log(cats);
+    });
   }
 
   // addProduit(){
@@ -50,7 +48,7 @@ export class AddProduit implements OnInit {
     });
   }*/
 
-  addProduit() {
+  /* addProduit() {
     this.produitService
       .uploadFichier(this.uploadedFichier, this.uploadedFichier.name)
       .subscribe((img: Fichier) => {
@@ -60,6 +58,16 @@ export class AddProduit implements OnInit {
           this.router.navigate(['produits']);
         });
       });
+  }*/
+
+  addProduit() {
+    this.newProduit.categorie = this.categories.find((cat) => cat.idCat == this.newIdCat)!;
+    this.produitService.ajouterProduit(this.newProduit).subscribe((prod) => {
+      this.produitService
+        .uploadImageFS(this.uploadedFichier, this.uploadedFichier.name, prod.idProduit)
+        .subscribe((response: any) => {});
+      this.router.navigate(['produits']);
+    });
   }
 
   onFichierUpload(event: any) {
@@ -70,5 +78,4 @@ export class AddProduit implements OnInit {
       this.fichierPath = reader.result;
     };
   }
-
 }
