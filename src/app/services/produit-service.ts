@@ -142,7 +142,7 @@ export class ProduitService {
     return this.http.post<Categorie>(url, cat);
   }
 
-  addHttpHeaderToken(){
+  addHttpHeaderToken() {
     let jwt = this.authService.getToken();
     jwt = 'Bearer ' + jwt;
     return new HttpHeaders({ Authorization: jwt });
@@ -162,4 +162,15 @@ export class ProduitService {
     return this.http.get<Fichier>(url);
   }
 
+  uploadImageProd(file: File, filename: string, idProd: number): Observable<any> {
+    const imageFormData = new FormData();
+    imageFormData.append('image', file, filename);
+    const url = `${apiURL + '/fichier/uplaodImageProd'}/${idProd}`;
+    return this.http.post(url, imageFormData);
+  }
+
+  supprimerImage(id: number) {
+    const url = `${apiURL}/fichier/delete/${id}`;
+    return this.http.delete(url, httpOptions);
+  }
 }

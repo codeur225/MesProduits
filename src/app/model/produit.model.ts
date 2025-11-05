@@ -7,6 +7,8 @@ export class Produit {
   prixProduit! : number;
   dateCreation! : Date ;
   categorie! : Categorie;
-  fichier! : Fichier
-  fichierStr!:string
+  fichier! : Fichier;
+  fichierStr!:string;
+
+  fichiers! : Fichier[];
 }

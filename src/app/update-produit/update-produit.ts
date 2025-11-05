@@ -34,17 +34,24 @@ export class UpdateProduit implements OnInit {
       this.categories = cats;
       console.log(cats);
     });
+    // this.produitService
+    //   .consulterProduit(this.activatedRoute.snapshot.params['id'])
+    //   .subscribe((prod) => {
+    //     this.currentProduit = prod;
+    //     this.updatedCatId = this.currentProduit.categorie.idCat!;
+
+    //     this.produitService
+    //       .loadFichier(this.currentProduit.fichier.idFichier)
+    //       .subscribe((img: Fichier) => {
+    //         this.myImage = 'data:' + img.type + ';base64,' + img.image;
+    //       });
+    //   });
+    // Multi
     this.produitService
       .consulterProduit(this.activatedRoute.snapshot.params['id'])
       .subscribe((prod) => {
         this.currentProduit = prod;
-        this.updatedCatId = this.currentProduit.categorie.idCat!;
-
-        this.produitService
-          .loadFichier(this.currentProduit.fichier.idFichier)
-          .subscribe((img: Fichier) => {
-            this.myImage = 'data:' + img.type + ';base64,' + img.image;
-          });
+        this.updatedCatId = prod.categorie.idCat!;
       });
   }
 
@@ -61,7 +68,7 @@ export class UpdateProduit implements OnInit {
     });
   }*/
 
-  updateProduit() {
+  /*updateProduit() {
     this.currentProduit.categorie = this.categories.find((cat) => cat.idCat == this.updatedCatId)!;
     //tester si l'image du produit a été modifiée
     if (this.isImageUpdated) {
@@ -78,7 +85,15 @@ export class UpdateProduit implements OnInit {
         this.router.navigate(['produits']);
       });
     }
+  }*/
+
+  updateProduit() {
+    this.currentProduit.categorie = this.categories.find((cat) => cat.idCat == this.updatedCatId)!;
+    this.produitService.updateProduit(this.currentProduit).subscribe((prod) => {
+      this.router.navigate(['produits']);
+    });
   }
+
 
   onImageUpload(event: any) {
     if (event.target.files && event.target.files.length) {
@@ -91,4 +106,25 @@ export class UpdateProduit implements OnInit {
       };
     }
   }
+
+  onAddImageProduit() {
+    this.produitService
+      .uploadImageProd(this.uploadedImage, this.uploadedImage.name, this.currentProduit.idProduit)
+      .subscribe((img: Fichier) => {
+        this.currentProduit.fichiers.push(img);
+      });
+  }
+
+  supprimerImage(img: Fichier) {
+    let conf = confirm('Etes-vous sûr ?');
+    if (conf)
+      this.produitService.supprimerImage(img.idFichier).subscribe(() => {
+        //supprimer image du tableau currentProduit.images
+        const index = this.currentProduit.fichiers.indexOf(img, 0);
+        if (index > -1) {
+          this.currentProduit.fichiers.splice(index, 1);
+        }
+      });
+  }
+
 }

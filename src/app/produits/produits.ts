@@ -8,15 +8,14 @@ import { Fichier } from '../model/Fichier.model';
 
 @Component({
   selector: 'app-produits',
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './produits.html',
-  styleUrl: './produits.css'
+  styleUrl: './produits.css',
 })
 export class Produits implements OnInit {
+  produits?: Produit[]; //un tableau de Produit
 
-  produits? : Produit[]; //un tableau de Produit
-
-  constructor(private produitService: ProduitService, public authService: AuthService ) {}
+  constructor(private produitService: ProduitService, public authService: AuthService) {}
 
   ngOnInit(): void {
     // this.produits = this.produitService.listeProduits();
@@ -27,28 +26,37 @@ export class Produits implements OnInit {
   //   this.produitService.supprimerProduit(p);
   // }
 
-  chargerProduits(){
-    this.produitService.listeProduit().subscribe(prods => {
-      console.log(prods);
-      this.produits = prods;
+  // chargerProduits(){
+  //   this.produitService.listeProduit().subscribe(prods => {
+  //     console.log(prods);
+  //     this.produits = prods;
 
+  //     this.produits.forEach((prod) => {
+  //       this.produitService.loadFichier(prod.fichier.idFichier).subscribe((img: Fichier) => {
+  //         prod.fichierStr = 'data:' + img.type + ';base64,' + img.image;
+  //         console.log(prod.fichierStr);
+  //       });
+  //     });
+  //   });
+  // }
+
+  chargerProduits() {
+    this.produitService.listeProduit().subscribe((prods) => {
+      this.produits = prods;
       this.produits.forEach((prod) => {
-        this.produitService.loadFichier(prod.fichier.idFichier).subscribe((img: Fichier) => {
-          prod.fichierStr = 'data:' + img.type + ';base64,' + img.image;
-          console.log(prod.fichierStr);
-        });
+        console.log(prod);
+        console.log(prod.fichiers[0]);
+        prod.fichierStr = 'data:' + prod.fichiers[0].type + ';base64,' + prod.fichiers[0].image;
       });
     });
   }
 
-  deleteProduit(p: Produit)
-  {
-    let conf = confirm("Etes-vous sûr ?");
+  deleteProduit(p: Produit) {
+    let conf = confirm('Etes-vous sûr ?');
     if (conf)
       this.produitService.supprimerProduit(p.idProduit).subscribe(() => {
-        console.log("produit supprimé");
+        console.log('produit supprimé');
         this.chargerProduits();
       });
   }
-
 }
